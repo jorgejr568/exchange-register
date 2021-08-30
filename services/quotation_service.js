@@ -27,20 +27,31 @@ class QuotationServiceClass {
     return results.map(({ id, ...rest }) => ({ id: HashId(id), ...rest }))
   }
 
-  listMostRecentBlocks = () => {
-    return new Promise((resolve) => {
-      this.QuotationRepo.listMostRecentBlocks(20).then((results) =>
-        resolve(results)
-      )
-    })
+  listMostRecentBlocks = async () => {
+    try {
+      const results = await this.QuotationRepo.listMostRecentBlocks(20)
+      return results
+    } catch (e) {
+      console.error(e)
+      return []
+    }
   }
 
-  listByBlock = (block) => {
-    return new Promise((resolve) => {
-      this.QuotationRepo.listByBlock(block)
-        .then((results) => resolve(this.resultsParser(results)))
-        .catch(() => resolve([]))
-    })
+  /**
+   *
+   * @param block
+   * @returns {Promise<Object[]>}
+   */
+  listByBlock = async (block) => {
+    try {
+      console.info(`Calling repo - listByBlock ${block} `)
+      const results = await this.QuotationRepo.listByBlock(block)
+      console.info(`${results.length} returned by repo - listByBlock ${block} `)
+      return this.resultsParser(results)
+    } catch (e) {
+      console.error(e)
+      return []
+    }
   }
 }
 
