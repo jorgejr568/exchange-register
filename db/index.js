@@ -9,7 +9,7 @@ const knex = require('knex')
  * @constructor
  * @returns knex.Client
  */
-const PostgresConnect = ({host, user, password, database, port}) => {
+const PostgresConnect = ({ host, user, password, database, port }) => {
   return knex({
     client: 'pg',
     connection: {
@@ -21,8 +21,8 @@ const PostgresConnect = ({host, user, password, database, port}) => {
     },
     migrations: {
       tableName: 'migrations',
-    }
-  });
+    },
+  })
 }
 
 module.exports = PostgresConnect

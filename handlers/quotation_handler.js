@@ -1,4 +1,4 @@
-const {Request, Response} = require('express')
+const { Request, Response } = require('express')
 const CONSTS = require('../utils/constants')
 const QuotationService = require('../services/quotation_service')
 const ExchangeAPI = require('../apis/exchange')
@@ -9,9 +9,9 @@ class QuotationHandler {
    * @param QuotationService {QuotationService}
    * @param ExchangeAPI {ExchangeAPI}
    */
-  constructor (QuotationService, ExchangeAPI) {
-    this.QuotationService = QuotationService;
-    this.ExchangeAPI = ExchangeAPI;
+  constructor(QuotationService, ExchangeAPI) {
+    this.QuotationService = QuotationService
+    this.ExchangeAPI = ExchangeAPI
   }
   /**
    *
@@ -19,107 +19,88 @@ class QuotationHandler {
    * @param res {Response}
    * @returns Promise
    */
-  register = (req, res) => {
-    return new Promise((resolve) => {
-      const key = req.header(CONSTS.key_header)
+  register = async (req, res) => {
+    const key = req.header(CONSTS.key_header)
 
-      if (key !== CONSTS.key){
-        res.status(403).json({
-          errors: [
-            'Forbidden',
-          ]
-        })
-        return resolve()
-      }
-
-      this
-        .ExchangeAPI
-        .latest()
-        .then(({data}) => {
-          const {success, rates} = data
-          if (!success) {
-            return res.status(500).json({
-              errors: [
-                'Error consulting exchanges API'
-              ]
-            })
-          }
-
-          const insert = Object.entries(rates).map(([target, quotation]) => ({
-            base: CONSTS.currencies.EUR,
-            target,
-            quotation,
-          }))
-
-          this.QuotationService.create(insert).then((result) => {
-            res.json({
-              success: true,
-              result,
-            })
-          }).catch((e) => {
-            console.error(e)
-            res.status(500).json({
-              errors: [
-                'Error creating quotations',
-                e.message,
-              ]
-            })
-          })
-        })
-        .catch((e) => {
-          console.error(e.message)
-          res
-            .status(500)
-            .json(e?.response?.body || ['Error consulting exchanges API'])
-        })
-        .finally(() => {
-          resolve()
-        })
-    })
-  }
-
-  /**
-   *
-   * @param req {Request}
-   * @param res {Response}
-   * @returns Promise
-   */
-  index = (req, res) => {
-    return new Promise((resolve => {
-      this
-        .QuotationService
-        .listMostRecentBlocks()
-        .then((result) => {
-          res.json(result)
-        })
-        .catch(e => {
-          res.status(500, {
-            errors: [
-              'Could not get most recent quotations'
-            ]
-          })
-        })
-        .finally(() => resolve())
-    }))
-  }
-
-  /**
-   *
-   * @param req {Request}
-   * @param res {Response}
-   * @returns Promise
-   */
-  show = (req, res) => {
-    const {block} = req.params
-    this.QuotationService.listByBlock(block).then(results => {
-      res.json(results)
-    }).catch(e => {
-      res.status(500).json({
-        errors: [
-          'Could not get results by block'
-        ]
+    if (key !== CONSTS.key) {
+      return res.status(403).json({
+        errors: ['Forbidden'],
       })
-    })
+    }
+
+    let success, rates
+    try {
+      const { data } = await this.ExchangeAPI.latest()
+      if (!data.success) {
+        throw new Error('rates unsuccesful')
+      }
+      success = data.success
+      rates = data.rates
+    } catch (e) {
+      console.error(e)
+      return res.status(500).json({
+        errors: ['Error consulting exchanges API'],
+      })
+    }
+
+    try {
+      const insert = Object.entries(rates).map(([target, quotation]) => ({
+        base: CONSTS.currencies.EUR,
+        target,
+        quotation,
+      }))
+
+      const result = await this.QuotationService.create(insert)
+
+      res.json({
+        success: true,
+        result,
+      })
+    } catch (e) {
+      console.error(e)
+      return res.status(500).json({
+        errors: ['Error creating quotations', e.message],
+      })
+    }
+  }
+
+  /**
+   *
+   * @param req {Request}
+   * @param res {Response}
+   * @returns Promise
+   */
+  index = async (req, res) => {
+    try {
+      const results = await this.QuotationService.listMostRecentBlocks()
+      return res.json(results)
+    } catch (e) {
+      return res.status(500, {
+        errors: ['Could not get most recent quotations'],
+      })
+    }
+  }
+
+  /**
+   *
+   * @param req {Request}
+   * @param res {Response}
+   * @returns Promise
+   */
+  show = async (req, res) => {
+    console.log('Calling {show} handler')
+    const { block } = req.params
+    console.info(`Listing quotations on block ${block}`)
+    try {
+      const results = await this.QuotationService.listByBlock(block)
+      console.info(`${results?.length} found on listByBlock`)
+      res.json(results)
+    } catch (e) {
+      console.error(e)
+      return res.status(500).json({
+        errors: ['Could not get results by block'],
+      })
+    }
   }
 }
 

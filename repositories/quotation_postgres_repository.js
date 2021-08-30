@@ -1,13 +1,13 @@
-const CONSTS = require("../utils/constants");
+const CONSTS = require('../utils/constants')
 
 class QuotationPostgresRepository {
   /**
    * @param pg
    * @param tableName {string}
    */
-  constructor (pg, tableName) {
-    this.pg = pg;
-    this.tableName = tableName;
+  constructor(pg, tableName) {
+    this.pg = pg
+    this.tableName = tableName
   }
 
   /**
@@ -16,25 +16,21 @@ class QuotationPostgresRepository {
    * @returns Promise
    */
   create = (data) => {
-    const insert = Array.isArray(data) ? data : [data];
+    const insert = Array.isArray(data) ? data : [data]
 
-    return this
-      .pg(this.tableName)
-      .insert(insert, ['*'])
+    return this.pg(this.tableName).insert(insert, ['*'])
   }
 
-  listMostRecentBlocks(limit){
-    return this
-      .pg
+  listMostRecentBlocks(limit) {
+    return this.pg
       .distinct('block', 'created_at')
       .from(this.tableName)
       .orderBy('created_at', 'desc')
       .limit(limit)
   }
 
-  listByBlock(block){
-    return this
-      .pg
+  listByBlock(block) {
+    return this.pg
       .select('*')
       .from(this.tableName)
       .whereRaw('base <> target')

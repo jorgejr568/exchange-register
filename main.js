@@ -16,18 +16,20 @@ const app = express()
  */
 const pg = PostgresConnect({
   database: CONSTS.pg.database,
-  user:     CONSTS.pg.username,
+  user: CONSTS.pg.username,
   password: CONSTS.pg.password,
-  port:     CONSTS.pg.port,
-  host:     CONSTS.pg.host,
+  port: CONSTS.pg.port,
+  host: CONSTS.pg.host,
 })
-
 
 const quotation_repository = new QuotationRepository(
   pg,
-  CONSTS.collections.quotations,
+  CONSTS.collections.quotations
 )
-const exchange_api = new ExchangesAPI(CONSTS.apis.exchange.url, CONSTS.apis.exchange.key)
+const exchange_api = new ExchangesAPI(
+  CONSTS.apis.exchange.url,
+  CONSTS.apis.exchange.key
+)
 
 /**
  * Setting up services
@@ -39,12 +41,16 @@ const quotation_service = new QuotationService(quotation_repository)
  */
 const quotation_handler = new QuotationHandler(quotation_service, exchange_api)
 
-
 /**
  * Registering routes
  */
 app.post('/', quotation_handler.register)
 app.get('/', quotation_handler.index)
+app.get('/favicon.ico', (_, res) => {
+  return res.status(404).send('Not found')
+})
 app.get('/:block', quotation_handler.show)
 
-app.listen(CONSTS.port, () => console.log(`Server running at http://localhost:${CONSTS.port}`))
+app.listen(CONSTS.port, () =>
+  console.log(`Server running at http://localhost:${CONSTS.port}`)
+)
