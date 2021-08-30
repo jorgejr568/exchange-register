@@ -102,6 +102,25 @@ class QuotationHandler {
         .finally(() => resolve())
     }))
   }
+
+  /**
+   *
+   * @param req {Request}
+   * @param res {Response}
+   * @returns Promise
+   */
+  show = (req, res) => {
+    const {block} = req.params
+    this.QuotationService.listByBlock(block).then(results => {
+      res.json(results)
+    }).catch(e => {
+      res.status(500).json({
+        errors: [
+          'Could not get results by block'
+        ]
+      })
+    })
+  }
 }
 
 module.exports = QuotationHandler

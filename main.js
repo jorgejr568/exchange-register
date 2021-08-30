@@ -45,5 +45,6 @@ const quotation_handler = new QuotationHandler(quotation_service, exchange_api)
  */
 app.post('/', quotation_handler.register)
 app.get('/', quotation_handler.index)
+app.get('/:block', quotation_handler.show)
 
 app.listen(CONSTS.port, () => console.log(`Server running at http://localhost:${CONSTS.port}`))

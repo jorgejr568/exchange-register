@@ -32,6 +32,16 @@ class QuotationPostgresRepository {
       .orderBy('created_at', 'desc')
       .limit(limit)
   }
+
+  listByBlock(block){
+    return this
+      .pg
+      .select('*')
+      .from(this.tableName)
+      .whereRaw('base <> target')
+      .orderBy('target', 'asc')
+      .where('block', '=', block)
+  }
 }
 
 module.exports = QuotationPostgresRepository

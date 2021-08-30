@@ -23,12 +23,26 @@ class QuotationServiceClass {
     return this.QuotationRepo.create(data)
   }
 
-  listMostRecent(){
+  resultsParser(results){
+    return results.map(({id, ...rest}) => ({id: HashId(id), ...rest}))
+  }
+
+  listMostRecent = () => {
     return new Promise((resolve) => {
       this
         .QuotationRepo
         .listMostRecent(20)
-        .then(results => resolve(results.map(({id, ...rest}) => ({id: HashId(id), ...rest}))))
+        .then(results => resolve(this.resultsParser(results)))
+    })
+  }
+
+  listByBlock = (block) => {
+    return new Promise(resolve => {
+      this
+        .QuotationRepo
+        .listByBlock(block)
+        .then(results => resolve(this.resultsParser(results)))
+        .catch(() => resolve([]))
     })
   }
 }
