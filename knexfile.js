@@ -1,3 +1,4 @@
+require('./env')
 const CONSTS = require('./utils/constants')
 
 module.exports = {

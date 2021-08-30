@@ -9,6 +9,9 @@ const CONSTS = Object.freeze({
     exchange: {
       key: process.env.EXCHANGE_API_KEY,
       url: process.env.EXCHANGE_API_URL || 'http://api.exchangeratesapi.io',
+    },
+    hashids: {
+      salt: process.env.HASHIDS_SALT || '85277e73-7c96-4bf9-a896-d982b834b55f',
     }
   },
   currencies: {

@@ -1,5 +1,8 @@
+require('./env')
+
 const express = require('express')
 const CONSTS = require('./utils/constants')
+
 const QuotationRepository = require('./repositories/quotation_postgres_repository')
 const QuotationService = require('./services/quotation_service')
 const ExchangesAPI = require('./apis/exchange')

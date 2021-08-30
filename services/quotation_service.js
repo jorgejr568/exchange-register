@@ -1,4 +1,6 @@
+const {nanoid} = require('nanoid')
 const QuotationRepository = require('../repositories/quotation_postgres_repository')
+const HashId = require("../utils/hashids");
 
 class QuotationServiceClass {
   /**
@@ -14,11 +16,20 @@ class QuotationServiceClass {
    * @param data {Object | Object[]}
    */
   create(data){
+    if (!Array.isArray(data)) data = [data]
+
+    const block = nanoid(20)
+    data = data.map((d) => ({block, ...d}))
     return this.QuotationRepo.create(data)
   }
 
   listMostRecent(){
-    return this.QuotationRepo.listMostRecent(20)
+    return new Promise((resolve) => {
+      this
+        .QuotationRepo
+        .listMostRecent(20)
+        .then(results => resolve(results.map(({id, ...rest}) => ({id: HashId(id), ...rest}))))
+    })
   }
 }
 
