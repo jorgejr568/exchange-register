@@ -28,13 +28,13 @@ class QuotationHandler {
       })
     }
 
-    let success, rates
+    let rates
     try {
       const { data } = await this.ExchangeAPI.latest()
       if (!data.success) {
-        throw new Error('rates unsuccesful')
+        throw new Error('rates unsuccessful')
       }
-      success = data.success
+
       rates = data.rates
     } catch (e) {
       console.error(e)

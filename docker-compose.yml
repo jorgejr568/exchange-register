@@ -9,3 +9,12 @@ services:
       - POSTGRESQL_USERNAME=root
       - POSTGRESQL_PASSWORD=123456
       - POSTGRESQL_DATABASE=exchange_register
+  app:
+    build:
+      context: .
+    env_file:
+      - .env
+    environment:
+      PORT: 3000
+    ports:
+      - '3000:3000'

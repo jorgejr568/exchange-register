@@ -22,6 +22,7 @@ const PostgresConnect = ({ host, user, password, database, port }) => {
     migrations: {
       tableName: 'migrations',
     },
+    pool: { min: 0, max: 10, idleTimeoutMillis: 500 },
   })
 }
 
