@@ -21,7 +21,7 @@ class QuotationPostgresRepository {
     return this.pg(this.tableName).insert(insert, ['*'])
   }
 
-  listMostRecentBlocks(limit) {
+  listMostRecentBlocks = (limit) => {
     return this.pg
       .distinct('block', 'created_at')
       .from(this.tableName)
@@ -29,7 +29,7 @@ class QuotationPostgresRepository {
       .limit(limit)
   }
 
-  listByBlock(block) {
+  listByBlock = (block) => {
     return this.pg
       .select('*')
       .from(this.tableName)
