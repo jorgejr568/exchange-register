@@ -1,0 +1,11 @@
+# Must fail authorization
+POST http://localhost:3000
+Authorization: aq1sw2de3
+
+###
+
+# Must register current quotation
+POST http://localhost:3000
+Authorization: G|uAb7z2.lj<dC`l?x5WuzdM:#a)S/m!g{sh"#l!T,/|+39sndrXj"90V>H4TnU
+
+
