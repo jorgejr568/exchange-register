@@ -64,15 +64,16 @@ class QuotationHandler {
                 e.message,
               ]
             })
-          }).finally(() => resolve())
+          })
         })
         .catch((e) => {
           console.error(e.message)
           res
             .status(500)
             .json(e?.response?.body || ['Error consulting exchanges API'])
+        })
+        .finally(() => {
           resolve()
-
         })
     })
   }
@@ -109,22 +110,15 @@ class QuotationHandler {
    * @returns Promise
    */
   show = (req, res) => {
-    return new Promise((resolve) => {
-      const {block} = req.params
-      this
-        .QuotationService
-        .listByBlock(block)
-        .then(results => {
-          res.json(results)
-        })
-        .catch(e => {
-          res.status(500).json({
-            errors: [
-              'Could not get results by block'
-            ]
-          })
-        })
-        .finally(() => resolve())
+    const {block} = req.params
+    this.QuotationService.listByBlock(block).then(results => {
+      res.json(results)
+    }).catch(e => {
+      res.status(500).json({
+        errors: [
+          'Could not get results by block'
+        ]
+      })
     })
   }
 }
