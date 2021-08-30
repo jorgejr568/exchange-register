@@ -1,4 +1,5 @@
 const CONSTS = require('./utils/constants')
+console.log({pg: CONSTS.pg})
 module.exports = {
   client: 'postgresql',
   connection: {
