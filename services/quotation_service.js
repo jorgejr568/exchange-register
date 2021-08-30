@@ -27,12 +27,12 @@ class QuotationServiceClass {
     return results.map(({id, ...rest}) => ({id: HashId(id), ...rest}))
   }
 
-  listMostRecent = () => {
+  listMostRecentBlocks = () => {
     return new Promise((resolve) => {
       this
         .QuotationRepo
-        .listMostRecent(20)
-        .then(results => resolve(this.resultsParser(results)))
+        .listMostRecentBlocks(20)
+        .then(results => resolve(results))
     })
   }
 

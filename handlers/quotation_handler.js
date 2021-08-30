@@ -88,7 +88,7 @@ class QuotationHandler {
     return new Promise((resolve => {
       this
         .QuotationService
-        .listMostRecent()
+        .listMostRecentBlocks()
         .then((result) => {
           res.json(result)
         })

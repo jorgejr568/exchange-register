@@ -23,12 +23,11 @@ class QuotationPostgresRepository {
       .insert(insert, ['*'])
   }
 
-  listMostRecent(limit){
+  listMostRecentBlocks(limit){
     return this
       .pg
-      .select('*')
+      .distinct('block', 'created_at')
       .from(this.tableName)
-      .where('target', '<>', CONSTS.currencies.EUR)
       .orderBy('created_at', 'desc')
       .limit(limit)
   }
