@@ -34,7 +34,7 @@ class QuotationHandler {
 
       this
         .ExchangeAPI
-        .latest([CONSTS.currencies.GBP, CONSTS.currencies.BRL, CONSTS.currencies.EUR, CONSTS.currencies.USD])
+        .latest()
         .then(({data}) => {
           const {success, rates} = data
           if (!success) {

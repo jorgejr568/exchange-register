@@ -11,7 +11,7 @@ class ExchangeRatesAPI {
   latest(symbols = []){
     return this.client.get('/v1/latest', {
       params: {
-        symbols: symbols.join(','),
+        symbols: symbols.length ? symbols.join(','): '',
         access_key: this.accessKey,
       }
     })
